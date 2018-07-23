@@ -23,7 +23,14 @@ module.exports = {
         use: [
           productionMode ? MiniCssExtractPlugin.loader : 'style-loader',
           'css-loader',
-          'sass-loader'
+          'sass-loader',
+        ],
+      },
+      {
+        test: /\.css$/,
+        use: [
+          productionMode ? MiniCssExtractPlugin.loader : 'style-loader',
+          'css-loader',
         ],
       },
     ],
@@ -32,9 +39,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/index.html',
     }),
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[id].css',
-    })
+    new MiniCssExtractPlugin('style.css'),
   ],
 };

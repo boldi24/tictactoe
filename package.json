@@ -19,8 +19,10 @@
   },
   "homepage": "https://github.com/boldi24/tictactoe#readme",
   "dependencies": {
+    "bootstrap": "^4.1.2",
     "react": "^16.4.1",
-    "react-dom": "^16.4.1"
+    "react-dom": "^16.4.1",
+    "reactstrap": "^6.3.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
