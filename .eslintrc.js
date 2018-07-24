@@ -1,10 +1,12 @@
 module.exports = {
-  "extends": "airbnb",
+  "extends": ["airbnb", "prettier", "prettier/react"],
   "rules": {
     "react/jsx-filename-extension": false,
-    "react/require-default-props": false
+    "react/require-default-props": false,
+    "linebreak-style": "off",
   },
   "env": {
+    "es6": true,
     "browser": true
   }
 };
