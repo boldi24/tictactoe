@@ -1,17 +1,32 @@
-import React from 'react';
-import Sqaure from './Sqaure';
+import React, { Component } from 'react';
+import Square from './Square';
 
-const Board = () => {
-  const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  return (
-    <div className="board">
-      <div className="content">
-        {nums.map( n =>
-          <Sqaure key={n} value={n} />)
-        }
+class Board extends Component {
+  constructor() {
+    super();
+    this.state = {
+      squares: Array(9).fill(null),
+    };
+  }
+
+  handleClick(i) {
+    const { squares } = this.state;
+    const newSquares = [...squares];
+    newSquares[i] = 'X';
+    this.setState({squares: newSquares});
+  }
+
+  render() {
+    const { squares } = this.state;
+
+    return (
+      <div className="board">
+        <div className="content">
+          {squares.map((n, i) => <Square key={i + squares[i]} value={squares[i]} onClick={() => this.handleClick(i)} />)}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 export default Board;
