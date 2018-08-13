@@ -1,10 +1,13 @@
 import React from 'react';
+import io from 'socket.io-client';
 import Home from "./Home";
 
-const App = () => (
+const App = () => {
+  const socket = io();
+  return(
   <div className="container-fluid">
     <Home/>
-  </div>
-);
+  </div>)
+};
 
 export default App;
