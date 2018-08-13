@@ -1,9 +1,8 @@
-const productionMode = process.env.NODE_ENV === 'production';
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-module.exports = {
+module.exports = (env, argv) =>  ({
   entry: './src/index.js',
   output: {
     path: path.join(__dirname, '/dist'),
@@ -21,7 +20,7 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [
-          productionMode ? MiniCssExtractPlugin.loader : 'style-loader',
+          argv.mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader',
           'css-loader',
           'sass-loader',
         ],
@@ -29,7 +28,7 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          productionMode ? MiniCssExtractPlugin.loader : 'style-loader',
+          argv.mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader',
           'css-loader',
         ],
       },
@@ -41,4 +40,4 @@ module.exports = {
     }),
     new MiniCssExtractPlugin('style.css'),
   ],
-};
+});
