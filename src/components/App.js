@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import Home from "./Home";
 
 const App = () => {
-  const socket = io();
+  const socket = io('http://localhost:8080');
   return(
   <div className="container-fluid">
     <Home/>

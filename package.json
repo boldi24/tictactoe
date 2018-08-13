@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start-react-only": "webpack-dev-server --mode development --open --hot",
-    "start": "npm run build && node app.js",
+    "client": "webpack-dev-server --mode development --open --port 3000 --hot",
+    "start": "node server/app.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "nodemon server/app.js",
     "build": "webpack --mode production",
     "lint": "eslint src",
     "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check"
@@ -22,6 +24,7 @@
   "homepage": "https://github.com/boldi24/tictactoe#readme",
   "dependencies": {
     "bootstrap": "^4.1.2",
+    "concurrently": "^3.6.1",
     "express": "^4.16.3",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
@@ -47,6 +50,7 @@
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.4.1",
     "node-sass": "^4.9.2",
+    "nodemon": "^1.18.3",
     "prettier": "1.13.7",
     "sass-loader": "^7.0.3",
     "style-loader": "^0.21.0",
