@@ -2,11 +2,11 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-module.exports = (env, argv) =>  ({
+module.exports = (env, argv) => ({
   entry: './src/index.js',
   output: {
     path: path.join(__dirname, '/dist'),
-    filename: 'bundle.js',
+    filename: 'bundle.js'
   },
   module: {
     rules: [
@@ -14,30 +14,28 @@ module.exports = (env, argv) =>  ({
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
-        },
+          loader: 'babel-loader'
+        }
       },
       {
         test: /\.scss$/,
-        use: [
-          argv.mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader',
-          'css-loader',
-          'sass-loader',
-        ],
+        use: [argv.mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader', 'css-loader', 'sass-loader']
       },
       {
         test: /\.css$/,
-        use: [
-          argv.mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader',
-          'css-loader',
-        ],
-      },
-    ],
+        use: [argv.mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader', 'css-loader']
+      }
+    ]
+  },
+  devServer: {
+    historyApiFallback: true,
+    port: 3000,
+    open: true
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/index.html',
+      template: './src/index.html'
     }),
-    new MiniCssExtractPlugin('style.css'),
-  ],
+    new MiniCssExtractPlugin('style.css')
+  ]
 });

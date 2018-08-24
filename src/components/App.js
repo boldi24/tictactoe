@@ -1,13 +1,18 @@
 import React from 'react';
-import io from 'socket.io-client';
-import Home from "./Home";
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { privateRoutes, publicRoutes } from '../routes';
+import PrivateRoute from '../containers/PrivateRoute';
 
-const App = () => {
-  const socket = io('http://localhost:8080');
-  return(
+const App = () => (
   <div className="container-fluid">
-    <Home/>
-  </div>)
-};
+    <Switch>
+      <Redirect from="/" to="/home" exact />
+      {/* eslint-disable-next-line react/no-array-index-key */}
+      {publicRoutes.map((r, i) => <Route key={i} {...r} />)}
+      {/* eslint-disable-next-line react/no-array-index-key */}
+      {privateRoutes.map((r, i) => <PrivateRoute key={i} {...r} />)}
+    </Switch>
+  </div>
+);
 
 export default App;

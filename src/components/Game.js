@@ -1,8 +1,7 @@
-import React, {Component} from 'react';
-import Board from "./Board";
+import React, { Component } from 'react';
+import Board from './Board';
 
 class Game extends Component {
-
   constructor() {
     super();
     this.state = {
@@ -14,17 +13,15 @@ class Game extends Component {
   }
 
   handleNextPlayerChange(newPlayer) {
-    this.setState({nextPlayer: newPlayer});
+    this.setState({ nextPlayer: newPlayer });
   }
 
   handleWinner(winner) {
-    console.log(winner);
-    this.setState({winner});
+    this.setState({ winner });
   }
 
   render() {
-
-    const {nextPlayer, winner} = this.state;
+    const { nextPlayer, winner } = this.state;
 
     return (
       <div>
@@ -35,7 +32,7 @@ class Game extends Component {
         </div>
         <div className="row">
           <div className="m-auto col-10 col-sm-3">
-            <Board onNextPlayerChange={this.handleNextPlayerChange} onWin={this.handleWinner}/>
+            <Board onNextPlayerChange={this.handleNextPlayerChange} onWin={this.handleWinner} />
           </div>
         </div>
         <div className="row">
@@ -45,9 +42,8 @@ class Game extends Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
-
-};
+}
 
 export default Game;
