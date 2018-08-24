@@ -2,13 +2,14 @@ import React from 'react';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 import { logIn } from '../actions/login';
 
 class Login extends React.Component {
   constructor() {
     super();
     this.state = {
-      username: ''
+      name: ''
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -16,18 +17,26 @@ class Login extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const { username } = this.state;
+    const { name } = this.state;
     const { logIn } = this.props;
-    if (username.length === 0) alert('Enter username');
-    logIn(username);
+    if (name.length === 0) alert('Enter username');
+    logIn(name);
   }
 
   handleChange(e) {
-    this.setState({ username: e.target.value });
+    this.setState({ name: e.target.value });
   }
 
   render() {
-    const { username } = this.state;
+    const { name } = this.state;
+    const { location, username } = this.props;
+    const { from } = location.state || { from: { pathname: '/' } };
+    console.log(from);
+    if (username) {
+      console.log('redirect');
+      return <Redirect to={from} push />;
+    }
+
     return (
       <div className="row">
         <div className="mx-auto col-12 col-md-4">
@@ -39,7 +48,7 @@ class Login extends React.Component {
                 name="username"
                 id="username"
                 placeholder="Enter your username"
-                value={username}
+                value={name}
                 onChange={this.handleChange}
               />
             </FormGroup>
@@ -52,7 +61,11 @@ class Login extends React.Component {
 }
 
 Login.propTypes = {
-  logIn: PropTypes.func
+  logIn: PropTypes.func,
+  username: PropTypes.string,
+  location: PropTypes.PropTypes.shape({
+    pathname: PropTypes.string
+  })
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -61,7 +74,11 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
+const mapStateToProps = state => ({
+  username: state.login.username
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Login);

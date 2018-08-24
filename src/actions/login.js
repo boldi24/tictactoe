@@ -1,11 +1,10 @@
 import { LOGIN_SUCCESS } from './types';
 
-const loginSuccess = payload => ({
+export const loginSuccess = payload => ({
   type: LOGIN_SUCCESS,
   payload
 });
 
-export const logIn = username => dispatch => {
-  console.log(username);
-  dispatch(loginSuccess());
+export const logIn = username => (dispatch, getState, socket) => {
+  socket.emit('LOGIN', username);
 };

@@ -5,12 +5,31 @@ import { connect } from 'react-redux';
 
 const PrivateRoute = props => {
   const { component: Component, username, ...rest } = props;
-  return <Route {...rest} render={props => (username ? <Component {...props} /> : <Redirect to="/login" />)} />;
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        username ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: '/login',
+              state: { from: props.location }
+            }}
+          />
+        )
+      }
+    />
+  );
 };
 
 PrivateRoute.propTypes = {
   component: PropTypes.func,
-  username: PropTypes.string
+  username: PropTypes.string,
+  location: PropTypes.PropTypes.shape({
+    pathname: PropTypes.string
+  })
 };
 
 const mapStateToProps = state => ({
