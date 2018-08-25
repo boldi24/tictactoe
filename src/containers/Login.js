@@ -31,9 +31,8 @@ class Login extends React.Component {
     const { name } = this.state;
     const { location, username } = this.props;
     const { from } = location.state || { from: { pathname: '/' } };
-    console.log(from);
+
     if (username) {
-      console.log('redirect');
       return <Redirect to={from} push />;
     }
 
