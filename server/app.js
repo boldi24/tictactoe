@@ -5,11 +5,19 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
+const uuidv1 = require('uuid/v1');
+
+const tictactoe = require('./tictactoe');
+
 app.use(express.static(path.join(__dirname, 'dist')));
 
 const overallState = {
   peopleWaiting: 0
 };
+
+let clientsWaiting = [];
+const clientsPlaying = [];
+const roomIdGameMap = new Map();
 
 io.on('connection', client => {
   console.log('a user connected');
@@ -17,12 +25,50 @@ io.on('connection', client => {
     console.log('User entered with name: ', username);
     client.emit('LOGIN_SUCCESS', { username });
     overallState.peopleWaiting += 1;
-    io.emit('UPDATE_PEOPLEWAITING', { peopleWaiting: overallState.peopleWaiting });
+    io.emit('UPDATE_MENU', { peopleWaiting: overallState.peopleWaiting });
   });
+
+  client.on('JOIN_RANDOM', () => {
+    client.emit('UPDATE_MENU', { isInGame: false });
+    clientsWaiting.push(client);
+  });
+
+  client.on('STEP', where => {
+    const game = roomIdGameMap.get(client.gameId);
+    if (!tictactoe.canPlayerStep(game, client)) return;
+    const newGame = tictactoe.stepGameState(game, where);
+    roomIdGameMap.set(client.gameId, newGame);
+    io.to(client.gameId).emit('UPDATE_GAME', newGame);
+  });
+
   client.on('disconnect', () => {
+    clientsWaiting = clientsWaiting.filter(c => c.id !== client.id);
     overallState.peopleWaiting -= 1;
-    io.emit('UPDATE_PEOPLEWAITING', { peopleWaiting: overallState.peopleWaiting });
+    io.emit('UPDATE_MENU', { peopleWaiting: overallState.peopleWaiting });
   });
 });
 
 http.listen(8080, () => console.log('Example app listening on port 8080!'));
+
+const matchPeople = () => {
+  while (clientsWaiting.length > 1) {
+    const xPlayer = clientsWaiting.pop();
+    const oPlayer = clientsWaiting.pop();
+    const initGS = tictactoe.getInitialGameState();
+    const gameId = uuidv1();
+    xPlayer.gameId = gameId;
+    oPlayer.gameId = gameId;
+    xPlayer.isX = true;
+    oPlayer.isX = false;
+    xPlayer.join(gameId);
+    oPlayer.join(gameId);
+    clientsPlaying.push(xPlayer, oPlayer);
+    roomIdGameMap.set(gameId, initGS);
+    io.to(gameId).emit('UPDATE_MENU', { isInGame: true });
+    xPlayer.emit('UPDATE_GAME', { isX: true });
+    oPlayer.emit('UPDATE_GAME', { isX: false });
+    io.to(gameId).emit('UPDATE_GAME', initGS);
+  }
+};
+
+setInterval(matchPeople, 2000);

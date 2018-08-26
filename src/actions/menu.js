@@ -1,6 +1,10 @@
-import { UPDATE_PEOPLEWAITING } from './types';
+import { UPDATE_MENU } from './types';
 
-export const updatePeopleWaiting = payload => ({
-  type: UPDATE_PEOPLEWAITING,
+export const updateMenu = payload => ({
+  type: UPDATE_MENU,
   payload
 });
+
+export const joinGame = () => (dispatch, getState, socket) => {
+  socket.emit('JOIN_RANDOM');
+};

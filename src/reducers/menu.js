@@ -1,4 +1,4 @@
-import { UPDATE_PEOPLEWAITING } from '../actions/types';
+import { UPDATE_MENU } from '../actions/types';
 
 const initialState = {
   peopleWaiting: null
@@ -6,7 +6,7 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case UPDATE_PEOPLEWAITING:
+    case UPDATE_MENU:
       return {
         ...state,
         ...action.payload

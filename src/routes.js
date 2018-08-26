@@ -1,5 +1,5 @@
 import Login from './containers/Login';
-import Home from './components/Home';
+import Home from './containers/Home';
 
 export const publicRoutes = [
   {

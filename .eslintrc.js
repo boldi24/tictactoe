@@ -9,7 +9,7 @@ module.exports = {
     "react/require-default-props": false,
     "prettier/prettier": "error",
     "no-shadow": 0,
-    "linebreak-style": "off",
+    "linebreak-style": "off"
   },
   "env": {
     "es6": true,
