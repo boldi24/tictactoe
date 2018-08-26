@@ -24,6 +24,7 @@
   "homepage": "https://github.com/boldi24/tictactoe#readme",
   "dependencies": {
     "bootstrap": "^4.1.2",
+    "classnames": "^2.2.6",
     "concurrently": "^3.6.1",
     "eslint-plugin-prettier": "^2.6.2",
     "express": "^4.16.3",

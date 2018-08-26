@@ -21,8 +21,7 @@ const Game = props => {
       </div>
       <div className="row">
         <div className="m-auto">
-          {!winner && <h2>Next Player: {xIsNext === isX ? 'You' : opponentName}</h2>}
-          {winner && <h2>Winner: {winner}</h2>}
+          {!winner ? <h2>Next Player: {xIsNext === isX ? 'You' : opponentName}</h2> : <h2>Winner: {winner}</h2>}
         </div>
       </div>
     </div>

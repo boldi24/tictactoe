@@ -12,21 +12,30 @@ const tictactoe = require('./tictactoe');
 app.use(express.static(path.join(__dirname, 'dist')));
 
 let clientsWaiting = [];
-const clientsPlaying = [];
+let clientsPlaying = [];
 const roomIdGameMap = new Map();
+
+const broadCast = (title, obj) => {
+  io.emit(title, obj);
+};
+
+const broadCastPeopleWaiting = () => {
+  broadCast('UPDATE_MENU', { peopleWaiting: clientsWaiting.length });
+};
 
 io.on('connection', client => {
   console.log('a user connected');
   client.on('LOGIN', username => {
     console.log('User entered with name: ', username);
+    client.emit('UPDATE_MENU', { peopleWaiting: clientsWaiting.length });
     client.emit('LOGIN_SUCCESS', { username });
     client.username = username;
-    io.emit('UPDATE_MENU', { peopleWaiting: clientsWaiting.length });
   });
 
   client.on('JOIN_RANDOM', () => {
-    client.emit('UPDATE_MENU', { isInGame: false });
+    client.emit('UPDATE_MENU', { isInGame: false, isInQueue: true });
     clientsWaiting.push(client);
+    broadCastPeopleWaiting();
   });
 
   client.on('STEP', where => {
@@ -37,9 +46,18 @@ io.on('connection', client => {
     io.to(client.gameId).emit('UPDATE_GAME', newGame);
   });
 
+  client.on('LEAVE_GAME', () => {
+    const index = clientsPlaying.find(c => c.id === client.id);
+    clientsPlaying = [...clientsPlaying.slice(0, index), ...clientsPlaying.slice(index + 1)];
+    clientsWaiting.push(client);
+    client.leave(client.gameId);
+    broadCastPeopleWaiting();
+  });
+
   client.on('disconnect', () => {
     clientsWaiting = clientsWaiting.filter(c => c.id !== client.id);
-    io.emit('UPDATE_MENU', { peopleWaiting: clientsWaiting.length });
+    clientsPlaying = clientsPlaying.filter(c => c.id !== client.id);
+    broadCastPeopleWaiting();
   });
 });
 
@@ -59,7 +77,7 @@ const matchPeople = () => {
     oPlayer.join(gameId);
     clientsPlaying.push(xPlayer, oPlayer);
     roomIdGameMap.set(gameId, initGS);
-    io.to(gameId).emit('UPDATE_MENU', { isInGame: true });
+    io.to(gameId).emit('UPDATE_MENU', { isInGame: true, peopleWaiting: clientsWaiting.length });
     xPlayer.emit('UPDATE_GAME', { isX: true, opponentName: oPlayer.username });
     oPlayer.emit('UPDATE_GAME', { isX: false, opponentName: xPlayer.username });
     io.to(gameId).emit('UPDATE_GAME', initGS);
