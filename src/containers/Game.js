@@ -5,7 +5,7 @@ import Board from '../components/Board';
 import { step } from '../actions/game';
 
 const Game = props => {
-  const { squares, winner, xIsNext, step, isX } = props;
+  const { squares, winner, xIsNext, step, isX, opponentName } = props;
   if (!squares) return <div>Loading...</div>;
   return (
     <div>
@@ -21,7 +21,7 @@ const Game = props => {
       </div>
       <div className="row">
         <div className="m-auto">
-          {!winner && <h2>Next Player: {xIsNext === isX ? 'You' : 'Opponent'}</h2>}
+          {!winner && <h2>Next Player: {xIsNext === isX ? 'You' : opponentName}</h2>}
           {winner && <h2>Winner: {winner}</h2>}
         </div>
       </div>
@@ -34,7 +34,8 @@ Game.propTypes = {
   squares: PropTypes.arrayOf(PropTypes.string),
   xIsNext: PropTypes.bool,
   step: PropTypes.func,
-  isX: PropTypes.bool
+  isX: PropTypes.bool,
+  opponentName: PropTypes.string
 };
 
 const mapStateToProps = ({ game }) => ({

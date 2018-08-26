@@ -11,10 +11,6 @@ const tictactoe = require('./tictactoe');
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
-const overallState = {
-  peopleWaiting: 0
-};
-
 let clientsWaiting = [];
 const clientsPlaying = [];
 const roomIdGameMap = new Map();
@@ -24,8 +20,8 @@ io.on('connection', client => {
   client.on('LOGIN', username => {
     console.log('User entered with name: ', username);
     client.emit('LOGIN_SUCCESS', { username });
-    overallState.peopleWaiting += 1;
-    io.emit('UPDATE_MENU', { peopleWaiting: overallState.peopleWaiting });
+    client.username = username;
+    io.emit('UPDATE_MENU', { peopleWaiting: clientsWaiting.length });
   });
 
   client.on('JOIN_RANDOM', () => {
@@ -43,8 +39,7 @@ io.on('connection', client => {
 
   client.on('disconnect', () => {
     clientsWaiting = clientsWaiting.filter(c => c.id !== client.id);
-    overallState.peopleWaiting -= 1;
-    io.emit('UPDATE_MENU', { peopleWaiting: overallState.peopleWaiting });
+    io.emit('UPDATE_MENU', { peopleWaiting: clientsWaiting.length });
   });
 });
 
@@ -65,8 +60,8 @@ const matchPeople = () => {
     clientsPlaying.push(xPlayer, oPlayer);
     roomIdGameMap.set(gameId, initGS);
     io.to(gameId).emit('UPDATE_MENU', { isInGame: true });
-    xPlayer.emit('UPDATE_GAME', { isX: true });
-    oPlayer.emit('UPDATE_GAME', { isX: false });
+    xPlayer.emit('UPDATE_GAME', { isX: true, opponentName: oPlayer.username });
+    oPlayer.emit('UPDATE_GAME', { isX: false, opponentName: xPlayer.username });
     io.to(gameId).emit('UPDATE_GAME', initGS);
   }
 };

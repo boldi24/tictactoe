@@ -8,14 +8,7 @@ const Home = props => {
   const { isInGame } = props;
   return (
     <div>
-      {isInGame ? (
-        <Game />
-      ) : (
-        <div>
-          <JoinGame />
-          <h4>Wait until someone joins...</h4>
-        </div>
-      )}
+      { isInGame ? <Game /> : <JoinGame /> }
     </div>
   );
 };
