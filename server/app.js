@@ -9,7 +9,7 @@ const uuidv1 = require('uuid/v1');
 
 const tictactoe = require('./tictactoe');
 
-app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, '/../dist')));
 
 let clientsWaiting = [];
 let clientsPlaying = [];

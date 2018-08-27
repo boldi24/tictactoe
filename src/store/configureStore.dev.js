@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import logger from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
 import rootReducer from '../reducers';
-import setupSocket, {setDispatch} from '../socket';
+import setupSocket, { setDispatch } from '../socket';
 
 export default preloadedState => {
   const composeEnhancers =
