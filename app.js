@@ -28,9 +28,7 @@ const broadCastPeopleWaiting = () => {
 };
 
 io.on('connection', client => {
-  console.log('a user connected');
   client.on('LOGIN', username => {
-    console.log('User entered with name: ', username);
     client.emit('UPDATE_MENU', { peopleWaiting: clientsWaiting.length });
     client.emit('LOGIN_SUCCESS', { username });
     client.username = username;
@@ -54,7 +52,6 @@ io.on('connection', client => {
 
   client.on('LEAVE_GAME', () => {
     const index = clientsPlaying.find(c => c.id === client.id);
-    console.log('LEAVE_GAME');
     clientsPlaying = [...clientsPlaying.slice(0, index), ...clientsPlaying.slice(index + 1)];
     client.leave(client.gameId);
     client.emit('UPDATE_MENU', { isInGame: false, isInQueue: false });

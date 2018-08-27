@@ -10,14 +10,16 @@ const calculateWinner = squares => {
   return null;
 };
 
-const isWon = game => game.winner != null;
+const isEnded = game => game.isEnded;
 
 const isOccupied = (game, where) => game.squares[where] != null;
 
 const canPlayerStep = (game, player) => game.xIsNext === player.isX;
 
+const isAllPlaced = game => game.squares.findIndex(s => s == null) === -1;
+
 const stepGameState = (game, where, who) => {
-  if (isWon(game) || isOccupied(game, where) || !canPlayerStep(game, who)) return null;
+  if (isEnded(game) || isOccupied(game, where) || !canPlayerStep(game, who)) return null;
   const newStep = game.xIsNext ? X : O;
   const newGame = { ...game };
   const newSquares = game.squares.map((s, i) => (i !== where ? s : newStep));
@@ -25,13 +27,15 @@ const stepGameState = (game, where, who) => {
   newGame.squares = newSquares;
   const winner = calculateWinner(newSquares);
   if (winner) newGame.winner = winner;
+  if (isAllPlaced(newGame) || winner) newGame.isEnded = true;
   return newGame;
 };
 
 const getInitialGameState = () => ({
   squares: new Array(9).fill(null),
   xIsNext: true,
-  winner: null
+  winner: null,
+  isEnded: false
 });
 
 module.exports = {
