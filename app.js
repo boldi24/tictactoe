@@ -44,10 +44,12 @@ io.on('connection', client => {
 
   client.on('STEP', where => {
     const game = roomIdGameMap.get(client.gameId);
-    if (!tictactoe.canPlayerStep(game, client)) return;
-    const newGame = tictactoe.stepGameState(game, where);
-    roomIdGameMap.set(client.gameId, newGame);
-    io.to(client.gameId).emit('UPDATE_GAME', newGame);
+    if (!game) return;
+    const newGame = tictactoe.stepGameState(game, where, client);
+    if (newGame) {
+      roomIdGameMap.set(client.gameId, newGame);
+      io.to(client.gameId).emit('UPDATE_GAME', newGame);
+    }
   });
 
   client.on('LEAVE_GAME', () => {
@@ -57,6 +59,7 @@ io.on('connection', client => {
     client.leave(client.gameId);
     client.emit('UPDATE_MENU', { isInGame: false, isInQueue: false });
     broadCastPeopleWaiting();
+    roomIdGameMap.delete(client.gameId);
   });
 
   client.on('disconnect', () => {
