@@ -8,3 +8,7 @@ export const updateGame = payload => ({
 export const step = where => (dispatch, getState, socket) => {
   socket.emit('STEP', where);
 };
+
+export const leaveGame = () => (dispatch, getState, socket) => {
+  socket.emit('LEAVE_GAME');
+};

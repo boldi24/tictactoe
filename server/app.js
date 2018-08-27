@@ -48,9 +48,10 @@ io.on('connection', client => {
 
   client.on('LEAVE_GAME', () => {
     const index = clientsPlaying.find(c => c.id === client.id);
+    console.log('LEAVE_GAME');
     clientsPlaying = [...clientsPlaying.slice(0, index), ...clientsPlaying.slice(index + 1)];
-    clientsWaiting.push(client);
     client.leave(client.gameId);
+    client.emit('UPDATE_MENU', { isInGame: false, isInQueue: false });
     broadCastPeopleWaiting();
   });
 
@@ -77,7 +78,7 @@ const matchPeople = () => {
     oPlayer.join(gameId);
     clientsPlaying.push(xPlayer, oPlayer);
     roomIdGameMap.set(gameId, initGS);
-    io.to(gameId).emit('UPDATE_MENU', { isInGame: true, peopleWaiting: clientsWaiting.length });
+    io.to(gameId).emit('UPDATE_MENU', { isInGame: true, isInQueue: false, peopleWaiting: clientsWaiting.length });
     xPlayer.emit('UPDATE_GAME', { isX: true, opponentName: oPlayer.username });
     oPlayer.emit('UPDATE_GAME', { isX: false, opponentName: xPlayer.username });
     io.to(gameId).emit('UPDATE_GAME', initGS);
