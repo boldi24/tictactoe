@@ -5,8 +5,8 @@ import { updateGame } from '../actions/game';
 
 let dp = null;
 
-const setupSocket = () => {
-  const socket = io('http://localhost:8080');
+const setupSocket = url => {
+  const socket = io(url);
   socket.on('LOGIN_SUCCESS', username => {
     dp(loginSuccess(username));
   });

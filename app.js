@@ -7,9 +7,13 @@ const io = require('socket.io')(http);
 
 const uuidv1 = require('uuid/v1');
 
-const tictactoe = require('./tictactoe');
+const tictactoe = require('./server/tictactoe');
 
-app.use(express.static(path.join(__dirname, '/../dist')));
+app.use(express.static(path.join(__dirname, 'dist')));
+
+app.get('/*', (req, res) => {
+  res.redirect('/');
+});
 
 let clientsWaiting = [];
 let clientsPlaying = [];
@@ -62,7 +66,8 @@ io.on('connection', client => {
   });
 });
 
-http.listen(8080, () => console.log('Example app listening on port 8080!'));
+const port = process.env.PORT || 8080;
+http.listen(port, () => console.log(`Example app listening on port ${port} !`));
 
 const matchPeople = () => {
   while (clientsWaiting.length > 1) {

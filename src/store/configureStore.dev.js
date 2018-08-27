@@ -11,7 +11,7 @@ export default preloadedState => {
   const store = createStore(
     rootReducer,
     preloadedState || {},
-    composeEnhancers(applyMiddleware(thunkMiddleware.withExtraArgument(setupSocket()), logger))
+    composeEnhancers(applyMiddleware(thunkMiddleware.withExtraArgument(setupSocket('http://localhost:8080')), logger))
   );
   setDispatch(store.dispatch);
   return store;
